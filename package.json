@@ -1,0 +1,30 @@
+{
+  "name" : "node-red-contrib-hourglass",
+  "version": "0.0.1",
+  "description": "Node-red node calculating elapsed time",
+  "main": "hourglass.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eschava/node-red-contrib-hourglass.git"
+  },
+  "keywords": [
+    "node",
+    "node-red",
+    "timer",
+    "time"
+  ],
+  "node-red": {
+    "nodes": {
+      "hourglass": "hourglass.js"
+    }
+  },
+  "author": "eschava",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/eschava/node-red-contrib-hourglass/issues"
+  },
+  "homepage": "https://github.com/eschava/node-red-contrib-hourglass#readme",
+  "dependencies": {
+    "moment": "^2.24.0"
+  }
+}
