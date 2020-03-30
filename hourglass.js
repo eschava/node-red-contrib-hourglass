@@ -79,7 +79,11 @@ module.exports = function(RED) {
             send = send || function() { node.send.apply(node, arguments) };
             error = error || function(err) { node.error(err, msg) };
 
-            switch(msg.command) {
+            var command = msg.command;
+            if (command == 'toggle')
+                command = node.started ? 'stop' : 'start';
+
+            switch(command) {
                 case 'start':
                 case 'resume':
                     if (!node.started) {
