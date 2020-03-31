@@ -23,4 +23,69 @@
 
 <script type="text/html" data-help-name="hourglass">
     <p>Node calculating elapsed time</p>
+
+    <h3>Inputs</h3>
+    <dl class="message-properties">
+        <dt>command <span class="property-type">string</span></dt>
+        <dd>command to the node (see possible commands below)</dd>
+        <dt class="optional">payload <span class="property-type">string</span></dt>
+        <dd> for msg.command="alarm" specifies the alarm time (see possible formats below)</dd>
+        <dt class="optional">recurrent <span class="property-type">string | boolean</span></dt>
+        <dd> for msg.command="alarm" specifies whether alarm should be recurrent</dd>
+        <dt class="optional">period <span class="property-type">string</span></dt>
+        <dd> for msg.command="alarm" and recurrent="true" specifies recurrent alert period if it differs from the alarm time
+            (see possible formats below)
+        </dd>
+    </dl>
+
+    <h3>Outputs</h3>
+    <dl class="message-properties">
+        <dt>started <span class="property-type">boolean</span></dt>
+        <dd>specifies whether calculation is active now</dd>
+        <dt>elapsed.millis <span class="property-type">long</span></dt>
+        <dd>time in milliseconds, specifies the time elapsed since calculation was started</dd>
+        <dt>elapsed.human <span class="property-type">string</span></dt>
+        <dd>human representation of the elapsed time (like '2 days')</dd>
+        <dt>elapsed.time <span class="property-type">object</span></dt>
+        <dd>has sub-properties of days/hours/minutes/seconds/milliseconds for the elapsed time</dd>
+    </dl>
+
+    <h3>Details</h3>
+    <p>This node could be used to calculate time elapsed since some initial moment till current time.</p>
+
+    <p>Calculation could be stopped (paused) and started (resumed) many times. Also, node persists all required information
+        between restarts of the Node-Red to the file system, so you don't need to worry about recovery of your data.</p>
+
+    <p>The most common case of using this node is calculation of the time when some device is working. It also could alert you
+        when it's time to do some maintenance work or change life-limited parts.</p>
+
+    <h3>Commands</h3>
+    <p>Every input message should have <code>command</code> property. Supported commands are:</p>
+    <p><code>start</code> - to start (or resume) time calculation</p>
+    <p><code>resume</code> - synonym of <code>start</code></p>
+    <p><code>stop</code> - to stop time calculation</p>
+    <p><code>pause</code> - synonym of <code>stop</code></p>
+    <p><code>reset</code> - resets calculation. Calculation continues from 00:00 if it was started before</p>
+    <p><code>status</code> - to report current status of the calculation. See output properties in the <b>Outputs</b> section</p>
+    <p><code>alarm</code> - adds new alarm to the node (NOTE: alarms are not persisted and recovered after restart of Node-Red).<br/>
+        See input properties in the <b>Inputs</b> section<br/>
+        Use <code>msg.recurrent</code> = <b>true</b> to send alarm event periodically, default period is the same as alarm time specified by payload property<br/>
+        Use <code>msg.period</code> to specify period of recurrent event if it differs from the alarm time (the same format is used)<br/>
+        Output message when alarm is fired is same as the message that was used to add the alarm plus extra properties used in the <code>status</code> command
+    </p>
+    <p><code>remove-alarms</code> - cancels and removes all alarms</p>
+
+    <h3>Alarm time formats</h3>
+    <code>payload</code> / <code>period</code> properties contain text representation of the time when alarm should be triggered. Possible formats are:<br/>
+    <code>8:00</code> - for hours with minutes<br/>
+    <code>9:30:30</code> - for hours with minutes and seconds<br/>
+    <code>7.00:00:00</code> - for days with time<br/>
+    <code>P1Y2M3D</code> - for years/month/days<br/>
+    For more information you could check <a href="https://momentjs.com/docs/#/durations/creating/">moment.js</a> docs<br/>
+
+    <h3>References</h3>
+    <ul>
+        <li><a href="https://github.com/eschava/node-red-contrib-hourglass">GitHub</a> - the node github repository</li>
+        <li><a href="https://momentjs.com/docs/#/durations/creating/">moment.js</a> - possible alarm time formats</li>
+    </ul>
 </script>
