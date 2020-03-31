@@ -32,7 +32,7 @@ Every input message should have **command** property. Supported commands are:
          `recurrent` - optional, use *true* to send alarm event periodically, default period is the same as alarm time specified by
             payload property  
          `period` - optional, to specify period of recurrent event if it differs from the alarm time (the same format is used)  
-      Output message when alarm is fired is same as the message as message that was used to add the alarm plus extra properties used 
+      Output message when alarm is fired is same as the message that was used to add the alarm plus extra properties used 
         in the *status* command
 
  - **remove-alarms** - cancels and removes all alarms
