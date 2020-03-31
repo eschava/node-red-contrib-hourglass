@@ -22,18 +22,18 @@ Every input message should have **command** property. Supported commands are:
      `elapsed.time` - has sub-properties of days/hours/minutes/seconds/milliseconds for elapsed time  
 
 - **alarm** - adds new alarm to the node (NOTE: alarms are not persisted and recovered after restart of Node-Red).  
-      Input properties for this command are:  
-         `payload` - text representation of the time when alarm should be triggered. Possible formats are:  
-                `8:00` - for hours with minutes  
-                `9:30:30` - for hours with minutes and seconds  
-                `7.00:00:00` - for days with time  
-                `P1Y2M3D` - for years/month/days  
-                For more information you could check [moment.js](https://momentjs.com/docs/#/durations/creating/) docs  
-         `recurrent` - optional, use *true* to send alarm event periodically, default period is the same as alarm time specified by
-            payload property  
-         `period` - optional, to specify period of recurrent event if it differs from the alarm time (the same format is used)  
-      Output message when alarm is fired is same as the message that was used to add the alarm plus extra properties used 
-        in the *status* command
+Input properties for this command are:  
+`payload` - text representation of the time when alarm should be triggered. Possible formats are:  
+      `8:00` - for hours with minutes  
+      `9:30:30` - for hours with minutes and seconds  
+      `7.00:00:00` - for days with time  
+      `P1Y2M3D` - for years/month/days  
+      For more information you could check [moment.js](https://momentjs.com/docs/#/durations/creating/) docs  
+`recurrent` - optional, use *true* to send alarm event periodically, default period is the same as alarm time specified by
+payload property  
+`period` - optional, to specify period of recurrent event if it differs from the alarm time (the same format is used)  
+Output message when alarm is fired is same as the message that was used to add the alarm plus extra properties used 
+in the *status* command
 
  - **remove-alarms** - cancels and removes all alarms
 
