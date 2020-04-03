@@ -44,4 +44,7 @@ in the *status* command
 
 ## Version history
 
-1.0.0 Initial release
+v1.1.0 Locale for humanized time
+
+v1.0.0 Initial release
+
