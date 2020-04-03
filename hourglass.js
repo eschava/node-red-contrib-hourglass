@@ -4,8 +4,9 @@ const moment = require('moment');
 
 module.exports = function(RED) {
     function HourglassNode(config) {
-        RED.nodes.createNode(this,config);
+        RED.nodes.createNode(this, config);
         var node = this;
+        var humanizeLocale = config.humanizeLocale;
 
         var dir = path.join(RED.settings.userDir, 'hourglass');
         var persistFile = path.join(dir, node.id);
@@ -28,7 +29,10 @@ module.exports = function(RED) {
         node.alarms = [];
 
         node.duration = function() {
-            return moment.duration(node.elapsed + (node.started ? Date.now() - node.startedAt : 0));
+            var duration = moment.duration(node.elapsed + (node.started ? Date.now() - node.startedAt : 0));
+            if (humanizeLocale)
+                duration = duration.locale(humanizeLocale);
+            return duration;
         }
 
         node.updateStatus = function() {
