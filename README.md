@@ -44,6 +44,8 @@ in the *status* command
 
 ## Version history
 
+v1.1.1 Cannot add the same alarm twice
+
 v1.1.0 Locale for humanized time
 
 v1.0.0 Initial release

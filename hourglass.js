@@ -149,6 +149,10 @@ module.exports = function(RED) {
 
                 case 'alarm':
                     var duration = moment.duration(msg.payload).asMilliseconds();
+                    if (node.alarms.find(a => a.duration == duration)) {
+                        error("Alarm '" + msg.payload + "' already exists");
+                        break;
+                    }
                     var elapsed = node.duration().asMilliseconds();
                     var period = 'period' in msg ? moment.duration(msg.period).asMilliseconds() : duration;
                     var timeLeft = duration - elapsed;
