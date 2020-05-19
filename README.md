@@ -44,6 +44,8 @@ in the *status* command
 
 ## Version history
 
+v1.3.0 Send status for start/stop/reset commands
+
 v1.2.0 Selector for humanized time locale
 
 v1.1.1 Cannot add the same alarm twice
