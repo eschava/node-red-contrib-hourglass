@@ -108,6 +108,8 @@ module.exports = function(RED) {
                     } else {
                         error('Already running');
                     }
+                    node.enrich(msg);
+                    send(msg);
                     break;
 
                 case 'pause':
@@ -124,6 +126,8 @@ module.exports = function(RED) {
                     } else {
                         error('Not running');
                     }
+                    node.enrich(msg);
+                    send(msg);
                     break;
 
                 case 'reset':
@@ -140,6 +144,8 @@ module.exports = function(RED) {
                             alarm.timeoutId = setTimeout(alarm.callback, timeLeft);
                         }
                     });
+                    node.enrich(msg);
+                    send(msg);
                     break;
 
                 case 'status':
