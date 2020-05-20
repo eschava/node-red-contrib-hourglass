@@ -34,8 +34,11 @@ Another typical use case is the measuring of time durations (e.g. signal pulse w
 
 Node configuration is quite simple. You only have to set the language to localize the output `elapsed.human`(see below) and the nodes status message (see Fig. 1: "a few seconds"). If you do not use this, you can omit the node configuration.
 
+<a name="time_measuring"></a>
+### Time measuring function ###
+The time measuring covers the functionality of a typical stopwatch.
 <a name="input_time_measuring"></a>
-### Input time measuring ###
+#### Inputs for time measuring function ####
 
 Every input `msg` should have a **command** property, otherwise an error is issued (see [Error handling](#error_handling)). Supported commands are:
 - **start** - starts (or resumes) time measuring  
@@ -46,12 +49,21 @@ Every input `msg` should have a **command** property, otherwise an error is issu
 - **reset** - resets measured value to 00:00. In the case of a running time measuring the value  continues to count from 00:00  
 - **status** - reports the actual status of the measured value. Output properties see section [Output](#output)  
 
-Remark: Alarm commands are described in the [alarm section](#). 
+Remark: Alarm commands are described in the [alarm section](#input_alarm_handling). 
+
+An example for an input `msg` object is as follows:
+
+<img src="assets/input-msg_start.png" title="Input message object" width="200" />
+
+**Fig. 3:** Input `msg` object (example *start* command)
+
+
+xxx hier noch irgendwie beschreiben, dass
+I've committed the change to send the status message for start/stop/reset commands if msg.status=true
 
 
 <a name="output_time_measuring"></a>
-### Output time measuring ###
-#### Output properties ####
+#### Output properties for time measuring function ####
 The `node-red-contrib-hourglass` node contains the following output properties within its sent `msg` objects: 
 * `command` - give the last received command
 * `started` - gives the status of the time measuring, specifies whether measuring is actually active
@@ -59,40 +71,29 @@ The `node-red-contrib-hourglass` node contains the following output properties w
 
 The output `msg` is sent in the case of every input msg with a valid command.
 
-<img src="assets/output-msg_object.png" title="Output message object" width="180" />
+<img src="assets/output-msg_object.png" title="Output message object" width="200" />
 
-**Fig. 3:** Output `msg`  object
+**Fig. 4:** Output `msg` object
 
 
 The output property `elapsed` contains a sub-object with the following properties:
-* `started` - true/false, specifies whether calculation is active now  
-* `elapsed.human` - human representation of elapsed time (like '2 days')  
-* `elapsed.millis` - time in milliseconds, specifies the time elapsed since calculation was started  
-* `elapsed.time` - has sub-properties of days/hours/minutes/seconds/milliseconds for elapsed time  
+* `elapsed.human` - human representation of elapsed time (like '2 days'). These strings are localized.  
+* `elapsed.millis` - time in milliseconds, specifies the time elapsed since measuring was started.  
+* `elapsed.time` - has sub-properties of days/hours/minutes/seconds/milliseconds for elapsed time.  
 
-In the output example shown in the previous figure, these `msg` object properties contain a *stopped* state ("started: false"), a last command as a *stop* command and the *elapsed time* of about 66 seconds.
-
-
-#### Node status ####
-The nodes status message shows 
-* an active time count with a green dot (see Fig. 4, left node), 
-* a paused/stopped timer with a grey circle (see Fig. 4, right node).  
-<img src="assets/node-status.png" title="Node status" width="300" />
-
-**Fig. 4:** `Hourglass` node status
+In the output example shown in the previous Fig. 4, these `msg` object properties contain a *stopped* state ("started: false"), a last command as a *stop* command and the *elapsed time* of about 66 seconds.
 
 
+<a name="alarm_handling"></a>
+### Alarm handling ###
+The alarm functionality covers the ability to set/remove several alarms. Generally there are no limitations of the number of active alarms within the node.
 
 <a name="input_alarm_handling"></a>
-### Input alarm handling ###
-
-
-
+#### Inputs for alarm handling ####
+Alarms are also controlled via input `msg` objects. Supported commands are:
 - **alarm** - adds a new alarm to the node (NOTE: Alarms are not persisted and recovered after restart of Node-RED).  
 - **remove-alarms** - cancels and removes all alarms
 
-#### Alarm command ####
-xxx how many alarms max?
 
 Input properties for this command are:  
 
@@ -109,7 +110,7 @@ payload property
 `period` - optional, to specify period of recurrent event if it differs from the alarm time (the same format is used)  
 
 <a name="output_alarm_handling"></a>
-### Output alarm handling ###
+#### Outputs for alarm handling ####
 
 Output message when alarm is fired is same as the message that was used to add the alarm plus extra properties used 
 in the *status* command
@@ -117,42 +118,64 @@ in the *status* command
 xxx Welche Ausgänge gibt es bei Alarms?
 
 
+### Node status ###
+The nodes status shows 
+* an active time count with a green dot (see Fig. 5, left node) and the message of the actual elapsed time, 
+* a paused/stopped timer with a grey circle (see Fig. 5, right node) with the message of the actual elapsed time.  
+* an alarm with a blue dot and a message *"Alarm ... message "*
+<img src="assets/node-status.png" title="Node status" width="300" />
+
+**Fig. 5:** `Hourglass` node status
+
+
+
 <a name="error_handling"></a>
 ## Error handling ## 
-xxx hier Fehlerbehandlung mit rein
+The node emits the following error messages, which may be catched via the `catch` node.
+Errors are signaled via an error message with a payload string giving the error cause.
 
+The following error messages may occur: 
+- "Not running" - occurs if the node is in *stopped* state and an input command *stop* or *pause* is received
+- "Already running" - occurs if the node is in *running* state and an input command *start* or *resume* is received
+- "Unknown command: *"command"* - occurs when an unknown (invalid) command is received
+- "Alarm *"alarm time"* already exists" - occurs when an alarm is already set at the desired alarm time
+- "Overdue alarm" - occurs if an alarm has expired but the node was not called a quite long time
 
-Fehlermeldungen mit einer error msg mit payload string (erscheint nicht am Output, sondern als Error)
-- "Not running", wenn stop oder pause bei "stopped"
-- "Already running", wenn start oder resume bei "started"
-- "Unknown command: <command>", wenn unbekanntes Kommando am Eingang
-
-xxx catchable?
+The errors may be catched with the `catch` node.
 
 
 <a name="examples"></a>
 ## Examples ##
 
-ToDo
-
-xxx add several examples
-- Basic time measuring between start and stop
-- Using pause and resume option
-- Using status message for getting split time
-- timer 1 resp. several
-
-### Basic time measuring (start, stop, reset) ###
+<a name="basic_time_measuring_example"></a>
+### Basic time measuring example (start, stop, reset) ###
 This example shows how to use the basic commands *start*, *stop*, *reset*. Injecting the appropriate command to the `hourglass` node shows the status at the node, the last injected command and the elapsed time. 
 Remark: A value unequal to '0' in the elapsed time when injecting *reset* at a running node is only a matter of performance of the Node-RED machine.  
 <img src="assets/example-basic.png" title="Basic example" width="650" />
 
-**Fig. xxx:** `Hourglass` basic example 
+**Fig. 6:** `Hourglass` basic example 
 
 
 ```json
 [{"id":"38d3bc18.5fab9c","type":"hourglass","z":"25e44718.693758","name":"","humanizeLocale":"","x":770,"y":140,"wires":[["b76eef4.f8f021"]]},{"id":"7bcac329.9101dc","type":"change","z":"25e44718.693758","name":"{command:'reset'}","rules":[{"t":"set","p":"command","pt":"msg","to":"reset","tot":"str"}],"action":"","property":"","from":"","to":"","reg":false,"x":480,"y":240,"wires":[["ac103e97.ca2d08","38d3bc18.5fab9c"]]},{"id":"3d77841f.654b0c","type":"change","z":"25e44718.693758","name":"{command:'start'}","rules":[{"t":"set","p":"command","pt":"msg","to":"start","tot":"str"}],"action":"","property":"","from":"","to":"","reg":false,"x":480,"y":140,"wires":[["ac103e97.ca2d08","38d3bc18.5fab9c"]]},{"id":"fb5df939.afa9f8","type":"change","z":"25e44718.693758","name":"{command:'stop'}","rules":[{"t":"set","p":"command","pt":"msg","to":"stop","tot":"str"}],"action":"","property":"","from":"","to":"","reg":false,"x":480,"y":180,"wires":[["ac103e97.ca2d08","38d3bc18.5fab9c"]]},{"id":"b76eef4.f8f021","type":"debug","z":"25e44718.693758","name":"","active":false,"tosidebar":true,"console":false,"tostatus":true,"complete":"elapsed.millis","targetType":"msg","x":1000,"y":140,"wires":[]},{"id":"ac103e97.ca2d08","type":"debug","z":"25e44718.693758","name":"last command","active":false,"tosidebar":false,"console":false,"tostatus":true,"complete":"command","targetType":"msg","x":780,"y":200,"wires":[]},{"id":"17ca3917.a04e2f","type":"inject","z":"25e44718.693758","name":"","topic":"","payload":"","payloadType":"str","repeat":"","crontab":"","once":false,"onceDelay":0.1,"x":270,"y":180,"wires":[["fb5df939.afa9f8"]]},{"id":"20bc7f33.c543a8","type":"inject","z":"25e44718.693758","name":"","topic":"","payload":"","payloadType":"str","repeat":"","crontab":"","once":false,"onceDelay":0.1,"x":270,"y":240,"wires":[["7bcac329.9101dc"]]},{"id":"7b3afdf3.637da4","type":"inject","z":"25e44718.693758","name":"","topic":"","payload":"","payloadType":"str","repeat":"","crontab":"","once":false,"onceDelay":0.1,"x":270,"y":140,"wires":[["3d77841f.654b0c"]]}]
 ```  
-**Fig. xxx:** `Hourglass` node example flow
+**Fig. 7:** `Hourglass` node example flow
+
+<a name="pause_and_resume_example"></a>
+### Using pause and resume option ###
+
+xxx
+
+
+<a name="split_time_with_status_command_example"></a>
+### Getting split time values using the status command ###
+
+xxx
+
+<a name="alarm_handling_example"></a>
+### Alarm handling example ###
+
+xxx alarm handling with 1 timer resp. several timers
 
 
 ## Version history
