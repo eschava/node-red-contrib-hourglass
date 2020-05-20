@@ -7,7 +7,7 @@ Additionally an ***alarm functionality*** is implemented which emits a special `
 Also, the node persists all required information between restarts of Node-RED to the file system, so you don't need to worry about recovery of your data.
   
 One common case of using this node is calculation of the time when some device is working (*operating hour counters 'OHC'*). In addition it also can alert you when it's time to do some maintenance work or change life-limited parts.
-Another typical use case is the measuring of time durations (e.g. signal pulse widths, process durations, motion sensor presence times, etc.).
+Another typical use case is the measuring of time durations (e.g. signal pulse widths, process durations, motion sensor presence times, etc.).  
 ![node-appearance](assets/node-appearance.png "Node appearance")  
 **Fig. 1:** Node appearance
 
@@ -34,10 +34,10 @@ Another typical use case is the measuring of time durations (e.g. signal pulse w
 
 Node configuration is quite simple. You only have to set the language to localize the output `elapsed.human`(see below) and the nodes status message (see Fig. 1: "a few seconds"). If you do not use this, you can omit the node configuration.
 
-<a name="input"></a>
-### Input ###
+<a name="input_time_measuring"></a>
+### Input time measuring ###
 
-Every input `msg` should have a **command** property. Supported commands are:
+Every input `msg` should have a **command** property, otherwise an error is issued (see [Error handling](#error_handling)). Supported commands are:
 - **start** - starts (or resumes) time measuring  
 - **stop** - stops (or pauses) time measuring  
 - **pause** - pauses time measuring. Synonym of **stop**  
@@ -46,12 +46,54 @@ Every input `msg` should have a **command** property. Supported commands are:
 - **reset** - resets measured value to 00:00. In the case of a running time measuring the value  continues to count from 00:00  
 - **status** - reports the actual status of the measured value. Output properties see section [Output](#output)  
 
+Remark: Alarm commands are described in the [alarm section](#). 
 
 
+<a name="output_time_measuring"></a>
+### Output time measuring ###
+#### Output properties ####
+The `node-red-contrib-hourglass` node contains the following output properties within its sent `msg` objects: 
+* `command` - give the last received command
+* `started` - gives the status of the time measuring, specifies whether measuring is actually active
+* `elapsed` - gives time values as an own sub-object (details see below)
+
+The output `msg` is sent in the case of every input msg with a valid command.
+
+<img src="assets/output-msg_object.png" title="Output message object" width="180" />
+
+**Fig. 3:** Output `msg`  object
+
+
+The output property `elapsed` contains a sub-object with the following properties:
+* `started` - true/false, specifies whether calculation is active now  
+* `elapsed.human` - human representation of elapsed time (like '2 days')  
+* `elapsed.millis` - time in milliseconds, specifies the time elapsed since calculation was started  
+* `elapsed.time` - has sub-properties of days/hours/minutes/seconds/milliseconds for elapsed time  
+
+In the output example shown in the previous figure, these `msg` object properties contain a *stopped* state ("started: false"), a last command as a *stop* command and the *elapsed time* of about 66 seconds.
+
+
+#### Node status ####
+The nodes status message shows 
+* an active time count with a green dot (see Fig. 4, left node), 
+* a paused/stopped timer with a grey circle (see Fig. 4, right node).  
+<img src="assets/node-status.png" title="Node status" width="300" />
+
+**Fig. 4:** `Hourglass` node status
+
+
+
+<a name="input_alarm_handling"></a>
+### Input alarm handling ###
+
+
+
+- **alarm** - adds a new alarm to the node (NOTE: Alarms are not persisted and recovered after restart of Node-RED).  
+- **remove-alarms** - cancels and removes all alarms
+
+#### Alarm command ####
 xxx how many alarms max?
 
-
-- **alarm** - adds new alarm to the node (NOTE: alarms are not persisted and recovered after restart of Node-Red).  
 Input properties for this command are:  
 
 `payload` - text representation of the time when alarm should be triggered. Possible formats are:  
@@ -66,45 +108,14 @@ payload property
 
 `period` - optional, to specify period of recurrent event if it differs from the alarm time (the same format is used)  
 
+<a name="output_alarm_handling"></a>
+### Output alarm handling ###
+
 Output message when alarm is fired is same as the message that was used to add the alarm plus extra properties used 
 in the *status* command
 
- - **remove-alarms** - cancels and removes all alarms
+xxx Welche Ausgänge gibt es bei Alarms?
 
-
-<a name="output"></a>
-### Output ###
-
-#### Output properties ####
-The `node-red-contrib-hourglass` node contains the following output properties within its sent `msg` objects: 
-* `command` - give the last received command
-* `started` - gives the status of the time measuring, specifies whether measuring is actually active
-* `elapsed` - gives time values as an own sub-object (details see below)
-
-The output `msg` is sent in the case of every input msg with a valid command.
-
-<img src="assets/output-msg_object.png" title="Output message object" width="180" />
-
-**Fig. xxx:** Output `msg`  object
-
-
-#### Output property `elapsed` ####
-The output property `elapsed` contains a sub-object with the following properties:
-* `started` - true/false, specifies whether calculation is active now  
-* `elapsed.human` - human representation of elapsed time (like '2 days')  
-* `elapsed.millis` - time in milliseconds, specifies the time elapsed since calculation was started  
-* `elapsed.time` - has sub-properties of days/hours/minutes/seconds/milliseconds for elapsed time  
-
-In the output example shown in the previous figure these `msg` object properties contain a *stopped* state ("started: false"), a last command as a *stop* command and the *elapsed time* of about 66 seconds.
-
-
-#### Node status ####
-The nodes status message shows 
-* an active time count with a green dot, 
-* a paused/stopped timer with a grey circle.
-<img src="assets/node-status.png" title="Node status" width="300" />
-
-**Fig. xxx:** `Hourglass` node status
 
 <a name="error_handling"></a>
 ## Error handling ## 
@@ -132,8 +143,8 @@ xxx add several examples
 
 ### Basic time measuring (start, stop, reset) ###
 This example shows how to use the basic commands *start*, *stop*, *reset*. Injecting the appropriate command to the `hourglass` node shows the status at the node, the last injected command and the elapsed time. 
-Remark: A value unequal to '0' in the elapsed time when injecting *reset* at a running node is only a matter of performance of the Node-RED machine. 
-<img src="assets/example-basic.png" title="Basic example" width="600" />
+Remark: A value unequal to '0' in the elapsed time when injecting *reset* at a running node is only a matter of performance of the Node-RED machine.  
+<img src="assets/example-basic.png" title="Basic example" width="650" />
 
 **Fig. xxx:** `Hourglass` basic example 
 
