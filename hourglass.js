@@ -87,6 +87,8 @@ module.exports = function(RED) {
             if (command == 'toggle')
                 command = node.started ? 'stop' : 'start';
 
+            var sendStatus = msg.status;
+
             switch(command) {
                 case 'start':
                 case 'resume':
@@ -108,8 +110,6 @@ module.exports = function(RED) {
                     } else {
                         error('Already running');
                     }
-                    node.enrich(msg);
-                    send(msg);
                     break;
 
                 case 'pause':
@@ -126,8 +126,6 @@ module.exports = function(RED) {
                     } else {
                         error('Not running');
                     }
-                    node.enrich(msg);
-                    send(msg);
                     break;
 
                 case 'reset':
@@ -144,13 +142,10 @@ module.exports = function(RED) {
                             alarm.timeoutId = setTimeout(alarm.callback, timeLeft);
                         }
                     });
-                    node.enrich(msg);
-                    send(msg);
                     break;
 
                 case 'status':
-                    node.enrich(msg);
-                    send(msg);
+                    sendStatus = true;
                     break;
 
                 case 'alarm':
@@ -202,6 +197,11 @@ module.exports = function(RED) {
                 default:
                     error('Unknown command: ' + msg.command);
                     break;
+            }
+
+            if (sendStatus) {
+                node.enrich(msg);
+                send(msg);
             }
         });
 
