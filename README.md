@@ -167,12 +167,12 @@ The following Fig. 10 shows an example of an output of a cyclic 5 seconds alarm 
 
 ### Node status ###
 The nodes status shows 
-* an active time count with a green dot (see Fig. 10, left node) and the message of the actual elapsed time, 
-* a paused/stopped timer with a grey circle (see Fig. 10, right node) with the message of the actual elapsed time.  
+* an active time count with a green dot (see Fig. 11, left node) and the message of the actual elapsed time, 
+* a paused/stopped timer with a grey circle (see Fig. 11, right node) with the message of the actual elapsed time.  
 * an alarm with a blue dot and a message *"Alarm ... message "*
 <img src="assets/node-status.png" title="Node status" width="300" />
 
-**Fig. 10:** `Hourglass` node status
+**Fig. 11:** `Hourglass` node status
 
 
 
