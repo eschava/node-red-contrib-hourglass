@@ -1,0 +1,68 @@
+v1.3.1
+(2020-05-22)
+
+Changes / Improvements / Optimisations:
+- Send status selectable for a better upwards compatibility.
+- Major documentation rework.
+- Changelog.txt added.
+
+Bug Fixes:
+- None.
+
+Known/Outstanding Issues:
+- None.
+
+For all additional issues that may appear after release, please see the following link for active tickets:
+    https://github.com/eschava/node-red-contrib-hourglass/issues.
+
+----------------------------------------------------------------------------------------------------------
+
+v1.3.0
+(2020-05-19)
+
+Changes / Improvements / Optimisations:
+- Send status for start/stop/reset commands.
+
+Bug Fixes:
+- None.
+
+
+----------------------------------------------------------------------------------------------------------
+
+v1.2.0
+(2020-05-14)
+
+Changes / Improvements / Optimisations:
+- Selector for humanized time locale.
+
+Bug Fixes:
+- None.
+
+----------------------------------------------------------------------------------------------------------
+
+v1.1.1
+(2020-04-05)
+
+Changes / Improvements / Optimisations:
+- None.
+
+Bug Fixes:
+- Cannot add the same alarm twice.
+----------------------------------------------------------------------------------------------------------
+
+v1.1.0
+(2020-04-03)
+
+Changes / Improvements / Optimisations:
+- Locale for humanized time.
+
+Bug Fixes:
+- None.
+----------------------------------------------------------------------------------------------------------
+
+v1.0.0
+(2020-03-31)
+
+Initial release.
+----------------------------------------------------------------------------------------------------------
+
