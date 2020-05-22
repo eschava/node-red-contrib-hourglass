@@ -92,7 +92,7 @@ This mode is selected by using the command property `msg.status` set to true in 
 
 **Fig. 5:** Input `msg` object in extended status message mode (example *stop* command)
 
-An inject node for manually tesing this mode could look like this:
+An inject node for manually tesing this mode could look like this:  
 <img src="assets/input-inject_stop_extended_mode.png" title="Input inject object for extended status message mode" width="320" />
 
 **Fig. 6:** Input inject node configuration for extended status message mode  
