@@ -183,15 +183,4 @@ This example shows how to use the basic commands *start*, *stop*, *reset* and *s
 xxx alarm handling with 1 timer resp. several timers
 
 
-## Version history
-
-v1.3.0 Send status for start/stop/reset commands
-
-v1.2.0 Selector for humanized time locale
-
-v1.1.1 Cannot add the same alarm twice
-
-v1.1.0 Locale for humanized time
-
-v1.0.0 Initial release
 
