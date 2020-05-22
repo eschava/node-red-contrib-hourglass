@@ -153,6 +153,8 @@
     <dl class="message-properties">
         <dt>command <span class="property-type">string</span></dt>
         <dd>command to the node (see possible commands below)</dd>
+        <dt class="optional">status <span class="property-type">boolean</span></dt>
+        <dd> use "true" to report current status of the calculation along with performing requested action</dd>
         <dt class="optional">payload <span class="property-type">string</span></dt>
         <dd> for msg.command="alarm" specifies the alarm time (see possible formats below)</dd>
         <dt class="optional">recurrent <span class="property-type">string | boolean</span></dt>
@@ -178,20 +180,21 @@
     <h3>Details</h3>
     <p>This node could be used to calculate time elapsed since some initial moment till current time.</p>
 
-    <p>Calculation could be stopped (paused) and started (resumed) many times. Also, node persists all required information
-        between restarts of the Node-Red to the file system, so you don't need to worry about recovery of your data.</p>
+    <p>Calculation could be stopped (paused) and started (resumed) many times. Also, the node persists all required information
+        between restarts of Node-RED to the file system, so you don't need to worry about recovery of your data.</p>
 
-    <p>The most common case of using this node is calculation of the time when some device is working. It also could alert you
-        when it's time to do some maintenance work or change life-limited parts.</p>
+    <p>One common case of using this node is calculation of the time when some device is working (operating hour counters 'OHC').
+        In addition it also can alert you when it's time to do some maintenance work or change life-limited parts.
+        Another typical use case is the measuring of time durations (e.g. signal pulse widths, process durations, motion sensor presence times, etc.).</p>
 
     <h3>Commands</h3>
     <p>Every input message should have <code>command</code> property. Supported commands are:</p>
-    <p><code>start</code> - to start (or resume) time calculation</p>
+    <p><code>start</code> - starts (or resumes) time measuring</p>
     <p><code>resume</code> - synonym of <code>start</code></p>
-    <p><code>stop</code> - to stop time calculation</p>
+    <p><code>stop</code> - stops (or pauses) time measuring</p>
     <p><code>pause</code> - synonym of <code>stop</code></p>
-    <p><code>reset</code> - resets calculation. Calculation continues from 00:00 if it was started before</p>
-    <p><code>status</code> - to report current status of the calculation. See output properties in the <b>Outputs</b> section</p>
+    <p><code>reset</code> - resets measured value to 00:00. In the case of a running time measuring the value continues to count from 00:00</p>
+    <p><code>status</code> - reports the actual status of the measured value. See output properties in the <b>Outputs</b> section</p>
     <p><code>alarm</code> - adds new alarm to the node (NOTE: alarms are not persisted and recovered after restart of Node-Red).<br/>
         See input properties in the <b>Inputs</b> section<br/>
         Use <code>msg.recurrent</code> = <b>true</b> to send alarm event periodically, default period is the same as alarm time specified by payload property<br/>
