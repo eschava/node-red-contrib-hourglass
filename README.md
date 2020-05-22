@@ -83,6 +83,7 @@ In the output example shown in the previous Fig. 4, these `msg` object propertie
 The basic timer operation is shown in the following figure: In the node internally there is a counter which is controlled via the several commands. The value given in the elapsed object is changed by the *status* command.
 
 <img src="assets/timer_basics.png" title="Basic timer operation" width="700" />
+
 **Fig. 5:** Basic timer operation 
 
 
@@ -105,6 +106,7 @@ An inject node for manually tesing this mode could look like this:
 The extended status message mode timer operation is shown in the following figure: In the node internally there is a counter which is controlled via the several commands. The value given in the elapsed object is changed by every command. See differences to Fig. 5.
 
 <img src="assets/timer_extended_mode.png" title="Extended status message mode operation" width="700" />
+
 **Fig. 8:** Extended status message mode operation 
 
 Possible use cases for this mode are: 
@@ -120,6 +122,7 @@ The time reference of the alarms relates to the node internal timer value, i.e. 
 For an explanation see Fig. 9: The programmed timer values are compared to the node internal counter value to determine the alarm time.
 
 <img src="assets/alarm_basics.png" title="Basic alarm handling" width="700" />
+
 **Fig. 9:** Basic alarm handling 
 
 
