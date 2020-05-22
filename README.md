@@ -6,7 +6,7 @@ Additionally an ***alarm functionality*** is implemented which emits a special `
 
 Also, the node persists all required information between restarts of Node-RED to the file system, so you don't need to worry about recovery of your data.
   
-One common case of using this node is calculation of the time when some device is working (*operating hour counters 'OHC'*). In addition it also can alert you when it's time to do some maintenance work or change life-limited parts.
+One common case of using this node is calculation of the time when some device is working (*operating hour counters 'OHC'*). In addition, it also can alert you when it's time to do some maintenance work or change life-limited parts.
 Another typical use case is the measuring of time durations (e.g. signal pulse widths, process durations, motion sensor presence times, etc.).  
 ![node-appearance](assets/node-appearance.png "Node appearance")  
 **Fig. 1:** Node appearance
@@ -32,7 +32,7 @@ Another typical use case is the measuring of time durations (e.g. signal pulse w
 ![node-settings](assets/node-settings.png "Node properties")  
 **Fig. 2:** Node properties
 
-Node configuration is quite simple. You only have to set the language to localize the output `elapsed.human`(see below) and the nodes status message (see Fig. 1: "a few seconds"). If you do not use this, you can omit the node configuration.
+Node configuration is quite simple. You only have to set the language to localize the output `elapsed.human`(see below) and the node's status message (see Fig. 1: "a few seconds"). If you do not use this, you can omit the node configuration.
 
 <a name="time_measuring"></a>
 ### Time measuring function ###
@@ -89,7 +89,7 @@ The basic timer operation is shown in the following figure: In the node internal
 
 <a name="extended_status"></a>
 #### Extended status message mode ####
-In some cases it is more convenient to get the elapsed time value directly with an according command, without an extra *status* command. Therefore the *extended status message mode* exists.  
+In some cases it is more convenient to get the elapsed time value directly with an according command, without an extra *status* command. Therefore, the *extended status message mode* exists.  
 Using this mode, the output `msg` is emitted in the case of every valid command, i.e. not only at the *status* command.
 
 This mode is selected by using the command property `msg.status` set to true in a command `msg`. If the command `msg` contains no status property, the basic mode is active (for compatibility, acts as before).
@@ -98,7 +98,7 @@ This mode is selected by using the command property `msg.status` set to true in 
 
 **Fig. 6:** Input `msg` object in extended status message mode (example *stop* command)
 
-An inject node for manually tesing this mode could look like this:  
+An inject node for manually testing this mode could look like this:  
 <img src="assets/input-inject_stop_extended_mode.png" title="Input inject object for extended status message mode" width="320" />
 
 **Fig. 7:** Input inject node configuration for extended status message mode  
@@ -111,7 +111,7 @@ The extended status message mode timer operation is shown in the following figur
 
 Possible use cases for this mode are: 
 * Measuring a pulse width, only using a *start* and a *stop* command. The *stop* command gives the result.
-* Measuring directly consecuting time durations where every duration shall have its own duration value (i.e. eacht duration measuring start at time counter '0'). This can be achieved using the *reset* while the time measuring keeps running.
+* Measuring directly consecutive time durations where every duration shall have its own duration value (i.e. each duration measuring start at time counter '0'). This can be achieved using the *reset* while the time measuring keeps running.
 * Add several time pieces to measured total times. This can be achieved by using the *toggle* command to start/stop the measuring. At every toggle you get the actual total sum time.
 
 
@@ -186,9 +186,9 @@ The following error messages may occur:
 - "Already running" - occurs if the node is in *running* state and an input command *start* or *resume* is received
 - "Unknown command: *"command"* - occurs when an unknown (invalid) command is received
 - "Alarm *"alarm time"* already exists" - occurs when an alarm is already set at the desired alarm time
-- "Overdue alarm" - occurs if an alarm is set but the nodes internal time is already ahead the alarm time
+- "Overdue alarm" - occurs if an alarm is set, but the nodes internal time is already ahead the alarm time
 
-The errors may be catched with the `catch` node.
+The errors may be caught with the `catch` node.
 
 
 <a name="examples"></a>
