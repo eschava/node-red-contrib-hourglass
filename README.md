@@ -210,7 +210,11 @@ This example shows how to use the basic commands *start*, *stop*, *reset* and *s
 <a name="alarm_handling_example"></a>
 ### Alarm handling example ###
 
-This example shows how to use the basic commands *start*, *stop*, *reset* and *status*.  
+This example shows how to use the *alarm* and *remove-alarms* command: You can activate three different alarm types, start, stop, reset the timer and clear all timers. In the debug nodes you can evaluate the structure and contents of sent output `msg` (at the node status and also in the debug window).  
+In the example, the last elapsed timer was the 5 seconds cyclic timer ("PT5S").
+
+Remark (refer also to Fig. 9): Without starting the timer via the command *start* no timer is able to elapse.
+
 <img src="assets/example-alarm.png" title="Alarm example" width="650" />
 
 **Fig. 14:** `Hourglass` alarm example 
