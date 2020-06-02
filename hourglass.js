@@ -7,9 +7,10 @@ module.exports = function(RED) {
         RED.nodes.createNode(this, config);
         var node = this;
         var humanizeLocale = config.humanizeLocale;
+        var persistId = config.persistId || node.id;
 
         var dir = path.join(RED.settings.userDir, 'hourglass');
-        var persistFile = path.join(dir, node.id);
+        var persistFile = path.join(dir, persistId);
 
         try {
             fs.mkdirSync(dir);

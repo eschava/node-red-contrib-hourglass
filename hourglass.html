@@ -4,6 +4,7 @@
         color: '#a6bbcf',
         defaults: {
             name: {value:""},
+            persistId: {value:""},
             humanizeLocale: {value:""}
         },
         inputs:1,
@@ -19,6 +20,16 @@
     <div class="form-row">
         <label for="node-input-name"><i class="icon-tag"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-persistId"><i class="icon-tag"></i> Unique ID for persisting</label>
+        <input type="text" id="node-input-persistId" placeholder="Persisting ID">
+    </div>
+    <div class="form-tips">
+        <b>Tip: </b>Persisting ID is needed only in cases when node is used inside sub-flows. <br/>
+        By default internal node ID is used as unique persisting ID but when node is a part of sub-flow,
+        then new node ID is generated on every restart of Node-Red so it needs some specified ID to correctly
+        restore/save its state.
     </div>
     <div class="form-row">
         <label for="node-input-humanizeLocale"><i class="icon-tag"></i> Locale for humanized time</label>
