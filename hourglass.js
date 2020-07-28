@@ -80,6 +80,22 @@ module.exports = function(RED) {
             };
         }
 
+        node.setTimeout = function(alarm, delay) {
+            var maxTimeoutDelay = 0x7FFFFFFF; //setTimeout limit is MAX_INT32=(2^31-1)
+            var dayDelay = 86400*1000; // 86400 seconds in a day
+
+            if (delay > maxTimeoutDelay)
+                alarm.timeoutId = setTimeout(function() {node.setTimeout(alarm, delay - dayDelay);}, dayDelay); // reschedule tomorrow
+            else if (delay > 0)
+                alarm.timeoutId = setTimeout(alarm.callback, delay);
+            else
+                alarm.timeoutId = 0;
+        }
+
+        node.clearTimeout = function(alarm) {
+            clearTimeout(alarm.timeoutId);
+        }
+
         node.on('input', function(msg, send, error) {
             send = send || function() { node.send.apply(node, arguments) };
             error = error || function(err) { node.error(err, msg) };
@@ -106,7 +122,7 @@ module.exports = function(RED) {
                             if (timeLeft <= 0 && alarm.recurrent)
                                 timeLeft = duration + alarm.period * Math.floor(1 + (elapsed - duration) / alarm.period) - elapsed;
 
-                            alarm.timeoutId = setTimeout(alarm.callback, timeLeft);
+                            node.setTimeout(alarm, timeLeft);
                         });
                     } else {
                         error('Already running');
@@ -122,7 +138,7 @@ module.exports = function(RED) {
                         node.persist();
 
                         node.alarms.forEach(function (alarm) {
-                            clearTimeout(alarm.timeoutId);
+                            node.clearTimeout(alarm);
                         });
                     } else {
                         error('Not running');
@@ -138,9 +154,9 @@ module.exports = function(RED) {
 
                     node.alarms.forEach(function (alarm){
                         if (node.started) {
-                            clearTimeout(alarm.timeoutId);
+                            node.clearTimeout(alarm);
                             var timeLeft = alarm.duration - node.duration().asMilliseconds();
-                            alarm.timeoutId = setTimeout(alarm.callback, timeLeft);
+                            node.setTimeout(alarm, timeLeft);
                         }
                     });
                     break;
@@ -171,12 +187,12 @@ module.exports = function(RED) {
                         ? function() {
                             node.enrich(msg);
                             send(msg);
-                            alarm.timeoutId = setTimeout(alarm.callback, alarm.period);
+                            node.setTimeout(alarm, alarm.period);
                             node.status({fill:'blue', shape:'dot', text:'Alarm ' + moment.duration(alarm.period).humanize(true)});
                         }
                         : function() {node.enrich(msg); send(msg); }
-                    alarm.timeoutId = node.started && timeLeft > 0 ? setTimeout(alarm.callback, timeLeft) : 0;
 
+                    node.setTimeout(alarm.callback, node.started && timeLeft > 0 ? timeLeft : 0)
                     node.alarms.push(alarm);
 
                     if (timeLeft <= 0) {
@@ -189,7 +205,7 @@ module.exports = function(RED) {
                 case 'remove-alarms':
                     if (node.started) {
                         node.alarms.forEach(function (alarm){
-                            clearTimeout(alarm.timeoutId);
+                            node.clearTimeout(alarm);
                         });
                     }
                     node.alarms = [];
@@ -212,7 +228,7 @@ module.exports = function(RED) {
                 node.statusIntervalId = 0;
             }
             node.alarms.forEach(function (alarm){
-                clearTimeout(alarm.timeoutId);
+                node.clearTimeout(alarm);
             });
             node.status({});
         });
