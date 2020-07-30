@@ -192,7 +192,7 @@ module.exports = function(RED) {
                         }
                         : function() {node.enrich(msg); send(msg); }
 
-                    node.setTimeout(alarm.callback, node.started && timeLeft > 0 ? timeLeft : 0)
+                    node.setTimeout(alarm, node.started && timeLeft > 0 ? timeLeft : 0)
                     node.alarms.push(alarm);
 
                     if (timeLeft <= 0) {
