@@ -39,7 +39,17 @@ module.exports = function(RED) {
         node.updateStatus = function() {
             var text = node.duration().humanize();
             if (node.started) {
-                node.status({fill:'green', shape:'dot', text:text});
+                var elapsed = node.duration().asMilliseconds();
+                var alarmOverdueCount = 0;
+                node.alarms.forEach(function (alarm) {
+                    if (alarm.duration <= elapsed)
+                        alarmOverdueCount++;
+                });
+                var statusColor =
+                    alarmOverdueCount == 0 ? 'green' :
+                    alarmOverdueCount == node.alarms.length ? 'red' :
+                    'yellow';
+                node.status({fill: statusColor, shape:'dot', text:text});
 
                 if (!node.statusIntervalId)
                     node.statusIntervalId = setInterval(node.updateStatus, 60000);
