@@ -1,11 +1,11 @@
 # node-red-contrib-hourglass
-`node-red-contrib-hourglass` is a highly versatile stopwatch node to measure ***time differences*** as a duration between a start and an end instant of time. 
+`node-red-contrib-hourglass` is a highly versatile stopwatch node to measure ***time differences*** as a duration between a start and an end instant of time.
 Measuring can be stopped (paused) and restarted (resumed) many times including a split time option. A reset function presets the time count value to zero. These are the typical functionalities of a stopwatch.
 
 Additionally an ***alarm functionality*** is implemented which emits a special `msg` at a definable instant of time. Several alarms may be used.
 
 Also, the node persists all required information between restarts of Node-RED to the file system, so you don't need to worry about recovery of your data.
-  
+
 One common case of using this node is calculation of the time when some device is working (*operating hour counters 'OHC'*). In addition, it also can alert you when it's time to do some maintenance work or change life-limited parts.
 Another typical use case is the measuring of time durations (e.g. signal pulse widths, process durations, motion sensor presence times, etc.).  
 ![node-appearance](assets/node-appearance.png "Node appearance")  
@@ -35,10 +35,10 @@ Another typical use case is the measuring of time durations (e.g. signal pulse w
 Node configuration is quite simple. You only have to set the language to localize the output `elapsed.human`(see below) and the node's status message (see Fig. 1: "a few seconds"). If you do not use this, you can omit the node configuration.
 
 <a name="time_measuring"></a>
-### Time measuring function ###
+### Time measuring function
 The time measuring covers the functionality of a typical stopwatch.
 <a name="input_time_measuring"></a>
-#### Inputs for time measuring function ####
+#### Inputs for time measuring function
 
 Every input `msg` should have a **command** property, otherwise an error is issued (see [Error handling](#error_handling)). Supported commands are:
 - **start** - starts (or resumes) time measuring  
@@ -59,13 +59,13 @@ An example for an input `msg` object is as follows:
 
 
 <a name="output_time_measuring"></a>
-#### Output properties for time measuring function ####
-The `node-red-contrib-hourglass` node contains the following output properties within its sent `msg` objects: 
+#### Output properties for time measuring function
+The `node-red-contrib-hourglass` node contains the following output properties within its sent `msg` objects:
 * `command` - give the last received command
 * `started` - gives the status of the time measuring, specifies whether measuring is actually active
 * `elapsed` - gives time values as an own sub-object (details see below)
 
-In the basic mode the node only emits a `msg` at a *status* command. 
+In the basic mode the node only emits a `msg` at a *status* command.
 An extended mode exists, where the output `msg` is send at every command (see [Extended status message mode](#extended_status)).  
 
 <img src="assets/output-msg_object.png" title="Output message object" width="200" />
@@ -84,11 +84,11 @@ The basic timer operation is shown in the following figure: In the node internal
 
 <img src="assets/timer_basics.png" title="Basic timer operation" width="700" />
 
-**Fig. 5:** Basic timer operation 
+**Fig. 5:** Basic timer operation
 
 
 <a name="extended_status"></a>
-#### Extended status message mode ####
+#### Extended status message mode
 In some cases it is more convenient to get the elapsed time value directly with an according command, without an extra *status* command. Therefore, the *extended status message mode* exists.  
 Using this mode, the output `msg` is emitted in the case of every valid command, i.e. not only at the *status* command.
 
@@ -107,27 +107,27 @@ The extended status message mode timer operation is shown in the following figur
 
 <img src="assets/timer_extended_mode.png" title="Extended status message mode operation" width="700" />
 
-**Fig. 8:** Extended status message mode operation 
+**Fig. 8:** Extended status message mode operation
 
-Possible use cases for this mode are: 
+Possible use cases for this mode are:
 * Measuring a pulse width, only using a *start* and a *stop* command. The *stop* command gives the result.
 * Measuring directly consecutive time durations where every duration shall have its own duration value (i.e. each duration measuring start at time counter '0'). This can be achieved using the *reset* while the time measuring keeps running.
 * Add several time pieces to measured total times. This can be achieved by using the *toggle* command to start/stop the measuring. At every toggle you get the actual total sum time.
 
 
 <a name="alarm_handling"></a>
-### Alarm handling ###
+### Alarm handling
 The alarm functionality covers the ability to set/remove several alarms. Generally there are no limitations of the number of active alarms within the node.  
-The time reference of the alarms relates to the node internal timer value, i.e. there is no relationship to the system time (e.g. UTC time). The internal time counts with the according start/stop commands. 
+The time reference of the alarms relates to the node internal timer value, i.e. there is no relationship to the system time (e.g. UTC time). The internal time counts with the according start/stop commands.
 For an explanation see Fig. 9: The programmed timer values are compared to the node internal counter value to determine the alarm time.
 
 <img src="assets/alarm_basics.png" title="Basic alarm handling" width="700" />
 
-**Fig. 9:** Basic alarm handling 
+**Fig. 9:** Basic alarm handling
 
 
 <a name="input_alarm_handling"></a>
-#### Inputs for alarm handling ####
+#### Inputs for alarm handling
 Alarms are controlled via input `msg` objects. Supported commands are:
 - **alarm** - adds a new alarm to the node (NOTE: Alarms are not persisted and recovered after restart of Node-RED).  
 - **remove-alarms** - cancels and removes all alarms
@@ -154,7 +154,7 @@ payload property
 `period` - optional, to specify period of recurrent event if it differs from the alarm time (the same format is used)  
 
 <a name="output_alarm_handling"></a>
-#### Outputs for alarm handling ####
+#### Outputs for alarm handling
 
 The output `msg.payload` when an alarm is fired is the same as the `msg.payload` that was used to add the alarm plus extra properties used in the *status* command.  
 The following Fig. 10 shows an example of an output of a cyclic 5 seconds alarm with identification "PT5S".
@@ -165,8 +165,8 @@ The following Fig. 10 shows an example of an output of a cyclic 5 seconds alarm 
 
 
 
-### Node status ###
-The nodes status shows 
+### Node status
+The nodes status shows
 * an active time count with a green dot (see Fig. 11, left node) and the message of the actual elapsed time,
 * the dot also could be red if all alerts are overdue or yellow if some (not all) of alerts are overdue
 * a paused/stopped timer with a grey circle (see Fig. 11, right node) with the message of the actual elapsed time.  
@@ -178,11 +178,11 @@ The nodes status shows
 
 
 <a name="error_handling"></a>
-## Error handling ## 
+## Error handling
 The node emits the following error messages, which may be catched via the `catch` node.
 Errors are signaled via an error message with a payload string giving the error cause.
 
-The following error messages may occur: 
+The following error messages may occur:
 - "Not running" - occurs if the node is in *stopped* state and an input command *stop* or *pause* is received
 - "Already running" - occurs if the node is in *running* state and an input command *start* or *resume* is received
 - "Unknown command: *"command"* - occurs when an unknown (invalid) command is received
@@ -193,23 +193,24 @@ The errors may be caught with the `catch` node.
 
 
 <a name="examples"></a>
-## Examples ##
+## Examples
+***
+**Remark**: Example flows are present in the examples subdirectory. In Node-RED they can be imported via the import function and then selecting *Examples* in the vertical tab menue.
+***
 
 <a name="basic_time_measuring_example"></a>
-### Basic time measuring example (start, stop, reset, status) ###
+### Basic time measuring example (start, stop, reset, status)
 This example shows how to use the basic commands *start*, *stop*, *reset* and *status*.  
+
 <img src="assets/example-basic.png" title="Basic example" width="650" />
 
-**Fig. 12:** `Hourglass` basic example 
+[**HourglassBasicFlow.json**](examples/HourglassBasicFlow.json)  
 
+**Fig. 12:** `Hourglass` basic example
 
-```json
-[{"id":"92109e0a.88d96","type":"hourglass","z":"26a14c0c.360194","name":"","humanizeLocale":"","x":751,"y":80,"wires":[["f8480416.0850d"]]},{"id":"5a0a72af.5c5fc4","type":"change","z":"26a14c0c.360194","name":"{command:'reset'}","rules":[{"t":"set","p":"command","pt":"msg","to":"reset","tot":"str"}],"action":"","property":"","from":"","to":"","reg":false,"x":464,"y":180,"wires":[["5f57def2.775bb","92109e0a.88d96"]]},{"id":"cfff0e2d.ada0e8","type":"change","z":"26a14c0c.360194","name":"{command:'start'}","rules":[{"t":"set","p":"command","pt":"msg","to":"start","tot":"str"}],"action":"","property":"","from":"","to":"","reg":false,"x":462,"y":80,"wires":[["5f57def2.775bb","92109e0a.88d96"]]},{"id":"a0a2d80e.88f7d","type":"change","z":"26a14c0c.360194","name":"{command:'stop'}","rules":[{"t":"set","p":"command","pt":"msg","to":"stop","tot":"str"}],"action":"","property":"","from":"","to":"","reg":false,"x":462,"y":120,"wires":[["5f57def2.775bb","92109e0a.88d96"]]},{"id":"f8480416.0850d","type":"debug","z":"26a14c0c.360194","name":"","active":true,"tosidebar":true,"console":false,"tostatus":true,"complete":"elapsed.millis","targetType":"msg","x":981,"y":80,"wires":[]},{"id":"5f57def2.775bb","type":"debug","z":"26a14c0c.360194","name":"last command","active":false,"tosidebar":false,"console":false,"tostatus":true,"complete":"command","targetType":"msg","x":761,"y":140,"wires":[]},{"id":"5d200463.e6e644","type":"inject","z":"26a14c0c.360194","name":"","topic":"","payload":"","payloadType":"str","repeat":"","crontab":"","once":false,"onceDelay":0.1,"x":250,"y":120,"wires":[["a0a2d80e.88f7d"]]},{"id":"894f06df.59219","type":"inject","z":"26a14c0c.360194","name":"","topic":"","payload":"","payloadType":"str","repeat":"","crontab":"","once":false,"onceDelay":0.1,"x":250,"y":180,"wires":[["5a0a72af.5c5fc4"]]},{"id":"f8935576.4a4ae","type":"inject","z":"26a14c0c.360194","name":"","topic":"","payload":"","payloadType":"str","repeat":"","crontab":"","once":false,"onceDelay":0.1,"x":250,"y":80,"wires":[["cfff0e2d.ada0e8"]]},{"id":"6384eb1d.90bca4","type":"inject","z":"26a14c0c.360194","name":"","topic":"","payload":"","payloadType":"str","repeat":"","crontab":"","once":false,"onceDelay":0.1,"x":250,"y":220,"wires":[["5bb3a7b5.cb8b9"]]},{"id":"5bb3a7b5.cb8b9","type":"change","z":"26a14c0c.360194","name":"{command:'status'}","rules":[{"t":"set","p":"command","pt":"msg","to":"status","tot":"str"}],"action":"","property":"","from":"","to":"","reg":false,"x":462,"y":220,"wires":[["92109e0a.88d96","5f57def2.775bb"]]}]
-```  
-**Fig. 13:** `Hourglass` node example flow
 
 <a name="alarm_handling_example"></a>
-### Alarm handling example ###
+### Alarm handling example
 
 This example shows how to use the *alarm* and *remove-alarms* command: You can activate three different alarm types, start, stop, reset the timer and clear all timers. In the debug nodes you can evaluate the structure and contents of sent output `msg` (at the node status and also in the debug window).  
 In the example, the last elapsed timer was the 5 seconds cyclic timer ("PT5S").
@@ -218,12 +219,6 @@ Remark (refer also to Fig. 9): Without starting the timer via the command *start
 
 <img src="assets/example-alarm.png" title="Alarm example" width="650" />
 
-**Fig. 14:** `Hourglass` alarm example 
+[**HourglassAlarmFlow.json**](examples/HourglassAlarmFlow.json)  
 
-
-```json
-[{"id":"76ad33c8.52d1e4","type":"hourglass","z":"26a14c0c.360194","name":"","humanizeLocale":"","x":750,"y":1280,"wires":[["48e7b8f6.d2b7e8","621f5071.e97ee","f84d53.0be15ab"]]},{"id":"8cb1ef4e.8dff38","type":"inject","z":"26a14c0c.360194","name":"","topic":"","payload":"","payloadType":"str","repeat":"","crontab":"","once":false,"onceDelay":0.1,"x":250,"y":1280,"wires":[["7b8c6063.f76678"]]},{"id":"7b8c6063.f76678","type":"change","z":"26a14c0c.360194","name":"set alarm in 1 minute","rules":[{"t":"set","p":"command","pt":"msg","to":"alarm","tot":"str"},{"t":"set","p":"payload","pt":"msg","to":"PT1M","tot":"str"}],"action":"","property":"","from":"","to":"","reg":false,"x":470,"y":1280,"wires":[["76ad33c8.52d1e4"]]},{"id":"5d7657e2.d07258","type":"change","z":"26a14c0c.360194","name":"{command:'status'}","rules":[{"t":"set","p":"command","pt":"msg","to":"status","tot":"str"}],"action":"","property":"","from":"","to":"","reg":false,"x":470,"y":1460,"wires":[["76ad33c8.52d1e4"]]},{"id":"650a4dc5.2cb5c4","type":"inject","z":"26a14c0c.360194","name":"","topic":"","payload":"","payloadType":"str","repeat":"","crontab":"","once":false,"onceDelay":0.1,"x":250,"y":1460,"wires":[["5d7657e2.d07258"]]},{"id":"48e7b8f6.d2b7e8","type":"debug","z":"26a14c0c.360194","name":"","active":true,"tosidebar":true,"console":false,"tostatus":true,"complete":"true","targetType":"full","x":950,"y":1240,"wires":[]},{"id":"621f5071.e97ee","type":"debug","z":"26a14c0c.360194","name":"","active":true,"tosidebar":true,"console":false,"tostatus":true,"complete":"payload","targetType":"msg","x":980,"y":1280,"wires":[]},{"id":"2b06cd04.bb404a","type":"inject","z":"26a14c0c.360194","name":"","topic":"","payload":"","payloadType":"str","repeat":"","crontab":"","once":false,"onceDelay":0.1,"x":250,"y":1500,"wires":[["9a8f22de.fee2e8"]]},{"id":"9a8f22de.fee2e8","type":"change","z":"26a14c0c.360194","name":"{command:'remove-alarms'}","rules":[{"t":"set","p":"command","pt":"msg","to":"remove-alarms","tot":"str"}],"action":"","property":"","from":"","to":"","reg":false,"x":500,"y":1500,"wires":[["76ad33c8.52d1e4"]]},{"id":"4516e2d8.3c1304","type":"inject","z":"26a14c0c.360194","name":"","topic":"","payload":"","payloadType":"str","repeat":"","crontab":"","once":false,"onceDelay":0.1,"x":250,"y":1560,"wires":[["66e38264.6658dc"]]},{"id":"66e38264.6658dc","type":"change","z":"26a14c0c.360194","name":"{command:'start'}","rules":[{"t":"set","p":"command","pt":"msg","to":"start","tot":"str"}],"action":"","property":"","from":"","to":"","reg":false,"x":460,"y":1560,"wires":[["76ad33c8.52d1e4"]]},{"id":"a94a0d94.066868","type":"change","z":"26a14c0c.360194","name":"{command:'stop'}","rules":[{"t":"set","p":"command","pt":"msg","to":"stop","tot":"str"}],"action":"","property":"","from":"","to":"","reg":false,"x":460,"y":1600,"wires":[["76ad33c8.52d1e4"]]},{"id":"6e5c7e92.30574","type":"inject","z":"26a14c0c.360194","name":"","topic":"","payload":"","payloadType":"str","repeat":"","crontab":"","once":false,"onceDelay":0.1,"x":250,"y":1600,"wires":[["a94a0d94.066868"]]},{"id":"c16d066d.091528","type":"inject","z":"26a14c0c.360194","name":"","topic":"","payload":"","payloadType":"str","repeat":"","crontab":"","once":false,"onceDelay":0.1,"x":250,"y":1320,"wires":[["bbb6f84a.a40458"]]},{"id":"bbb6f84a.a40458","type":"change","z":"26a14c0c.360194","name":"set alarm in 10 seconds","rules":[{"t":"set","p":"command","pt":"msg","to":"alarm","tot":"str"},{"t":"set","p":"payload","pt":"msg","to":"PT10S","tot":"str"}],"action":"","property":"","from":"","to":"","reg":false,"x":480,"y":1320,"wires":[["76ad33c8.52d1e4"]]},{"id":"76dbf5ec.8779ec","type":"change","z":"26a14c0c.360194","name":"{command:'reset'}","rules":[{"t":"set","p":"command","pt":"msg","to":"reset","tot":"str"}],"action":"","property":"","from":"","to":"","reg":false,"x":460,"y":1640,"wires":[["76ad33c8.52d1e4"]]},{"id":"a96d28f8.b75238","type":"inject","z":"26a14c0c.360194","name":"","topic":"","payload":"","payloadType":"str","repeat":"","crontab":"","once":false,"onceDelay":0.1,"x":250,"y":1640,"wires":[["76dbf5ec.8779ec"]]},{"id":"f84d53.0be15ab","type":"debug","z":"26a14c0c.360194","name":"","active":false,"tosidebar":true,"console":false,"tostatus":true,"complete":"elapsed.millis","targetType":"msg","x":1000,"y":1340,"wires":[]},{"id":"d96192a5.cb6d28","type":"inject","z":"26a14c0c.360194","name":"","topic":"","payload":"","payloadType":"str","repeat":"","crontab":"","once":false,"onceDelay":0.1,"x":250,"y":1360,"wires":[["7415035c.5308fc"]]},{"id":"7415035c.5308fc","type":"change","z":"26a14c0c.360194","name":"set cyclic alarm 5 seconds","rules":[{"t":"set","p":"command","pt":"msg","to":"alarm","tot":"str"},{"t":"set","p":"payload","pt":"msg","to":"PT5S","tot":"str"},{"t":"set","p":"recurrent","pt":"msg","to":"true","tot":"bool"}],"action":"","property":"","from":"","to":"","reg":false,"x":490,"y":1360,"wires":[["76ad33c8.52d1e4"]]}]
-```  
-**Fig. 15:** `Hourglass` alarm example flow
-
-
+**Fig. 13:** `Hourglass` alarm example
