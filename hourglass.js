@@ -135,7 +135,7 @@ module.exports = function(RED) {
                             node.setTimeout(alarm, timeLeft);
                         });
                     } else {
-                        error('Already running');
+                        node.debug('Already running');
                     }
                     break;
 
@@ -151,7 +151,7 @@ module.exports = function(RED) {
                             node.clearTimeout(alarm);
                         });
                     } else {
-                        error('Not running');
+                        node.debug('Not running');
                     }
                     break;
 
@@ -178,7 +178,7 @@ module.exports = function(RED) {
                 case 'alarm':
                     var duration = moment.duration(msg.payload).asMilliseconds();
                     if (node.alarms.find(a => a.duration == duration)) {
-                        error("Alarm '" + msg.payload + "' already exists");
+                        node.debug("Alarm '" + msg.payload + "' already exists");
                         break;
                     }
                     var elapsed = node.duration().asMilliseconds();
@@ -206,7 +206,7 @@ module.exports = function(RED) {
                     node.alarms.push(alarm);
 
                     if (timeLeft <= 0) {
-                        error("Overdue alarm");
+                        node.debug("Overdue alarm");
                     } else if (node.started) {
                         node.status({fill:'blue', shape:'dot', text:'Alarm ' + moment.duration(timeLeft).humanize(true)});
                     }
